@@ -1,99 +1,4 @@
-taskKey="com.codegym.games.game2048.part07"\n\n2048 (Part 7/18)
-
-Based on the rules of the game, we can move all tiles to one of the 4 sides: up, down, right, or left.
-When we do this, tiles with a value of 2 or more go in one direction (the direction of the move), and empty
-cells move in the opposite direction.
-
-At this stage, we'll implement a left shift. To do this, we need a private boolean compressRow(int[] row)
-method that shifts all
-non-zero elements of the row array to the left (towards the zero index), while zero elements are moved to
-the right.
-If at least one element was moved, the method returns true, otherwise – false.
-
-Here are some examples:
-- Before (0, 2, 0, 2), after (2, 2, 0, 0). The method returns true.
-- Before (2, 2, 2, 2), after (2, 2, 2, 2). The method returns false.
-- Before (0, 4, 0, 2), after (4, 2, 0, 0). The method returns true.
-- Before (4, 2, 0, 2), after (4, 2, 2, 0). The method returns true.
-- Before (2, 4, 0, 0), after (2, 4, 0, 0). The method returns false.
-
-
-Requirements:
-1.	A private boolean compressRow(int[] row) method must be created in the Game2048 class.
-2.	The compressRow(int[]) method must be implemented in accordance with the task conditions.
-3.	The compressRow(int[]) method must return true if it made changes to the incoming array; and false, if no changes were made.
-
-
-2048 (Part 6/18)
-
-It's already much better. But I think we can do more. Let's paint cells with the same values the same
-colors.
-
-To do this, write a setCellColoredNumber method that will take as arguments a cell's coordinates
-and value, and:
-- calculate the cell color (using the getColorByValue method, which is described below),
-- display the cell value and color on the game board.
-
-To calculate the color, we implement the getColorByValue helper method, which will return a color based on
-the cell value passed to method. For example, if we pass 2 to the method, then it returns Color.BLUE, etc.
-Cells with different values should have different colors; cells with the same values should have the same
-color.
-The numbers that can exist in the gameField matrix are: 0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048.
-
-To display the cell value and color with coordinates (x, y) on the game board, the Game class's special
-setCellValueEx(int x, int y, Color cellColor, String value) method comes to our aid.
-Use it to change the cell color and value at the same time.
-Don't display the value 0 on the game board: instead, we simply see an empty cell. Therefore, for cells with
-the value 0,
-simply pass an empty string to the setCellValueEx() method.
-
-And the final touch: in the drawScene() method, replace the call to the setCellColor() method with the
-setCellColoredNumber() method.
-
-Notes:
-1. For clarity, empty cells will be denoted by zeros in the examples.
-2. The matrix coordinates must match the displayed coordinates.
-
-Example:
-Matrix: {
-{2, 4, 8, 16},
-{32, 64, 128, 256},
-{512, 1024, 2048, 0},
-{2, 4, 8, 16}
-}
-Corresponding representation:
-https://codegym.cc/pictures/78/3ee5e6fb-dee6-4773-9c37-9512be6bb0d3.png
-To do this, when setting a value on the game board, invert the matrix coordinates.
-For example, to set the value of the cell with coordinates (x, y), use the matrix value gameField[y][x].
-
-To better understand what we're saying, draw the matrix — first using gameField[y][x], and then
-gameField[x][y].
-
-
-
-2048 (Part 5/18)
-
-According to the rules, when you start a game, the values of two random cells must be 2 or 4 (with a
-probability of 90% and 10%, respectively).
-
-To satisfy this requirement, create a createNewNumber() method and call it twice in the createGame() method.
-The createNewNumber() method:
-1) selects a random cell whose value is 0 in the gameField matrix.
-Hint: A "random cell" is a cell with random coordinates. To get a random x coordinate, you need to
-use a random number between 0 and SIZE. This can be done by calling the getRandomNumber(int) method
-with SIDE as the argument. For the y coordinate, you need to do something similar. After getting the
-coordinates, you need to check the cell value and,
-if it is not 0, then repeat the search for a random cell until you find one whose value is 0;
-2) randomly assigns a value of 2 (probability of 90%) or 4 (probability of 10%).
-Hint: use the getRandomNumber(int) method with 10 as the argument:
-The getRandomNumber(10) method returns a random number between 0 and 9. So it will return the number 9 with
-a probability of 10%.
-- if getRandomNumber(10) returns the number 9, the cell should be assigned the value 4;
-- if getRandomNumber(10) returns a number between 0 and 8, the cell should be assigned the value 2.
-
-
-
-2048 (Part 4/18)
+taskKey="com.codegym.games.game2048.part04"\n\n2048 (Part 4/18)
 
 Somehow a black screen doesn't look very good, right? Let's change that.
 
@@ -106,6 +11,12 @@ setCellColor(0, 2, Color.RED).
 
 Create a drawScene() method that colors all the cells of the game board a color you like.
 
+
+Requirements:
+1.	A private void drawScene() method must be created in the Game2048 class.
+2.	The drawScene() method must call the setCellColor(int, int, Color) method for each cell.
+3.	In the initialize() method, the drawScene() method must be called last.
+4.	All tiles must be painted the same color.
 
 
 2048 (Part 3/18)
@@ -133,6 +44,40 @@ static final int SIDE variable (constant) whose value is 4 and pass it as the ar
 setScreenSize() method. You should end up with something like this: setScreenSize(SIDE, SIDE). You can run
 your own program again
 and see what happens.
+
+
+
+2048 (Part 1/18)
+
+Hi! Today we'll start writing an interesting and addictive game — 2048. Are you ready? Then let's go.
+Rules of the game:
+The game board is square. The standard board size is 4x4 tiles. The objective of the game is to get a tile
+whose value is 2048.
+1. A tile with a value of 2 (probability of 90%) or 4 (probability of 10%) appears in each round.
+2. You can shift all the tiles on the game board to one of the 4 sides by pressing the corresponding key:
+up, down,
+right, or left. If a shift causes two tiles with the same value to "collide", then they merge into one.
+The new value is the sum of the merged tiles. After each move, a new tile with a value of 2 or 4 appears in
+an empty
+space on the game board. If pressing a key does not cause the tiles to change locations or values, then no
+turn has been made.
+3. If more than two tiles of the same value are in the same row or column, then they merge from the side
+from which they are being shifted. For example, after a shift to the left, the tiles (4, 4, 4, 0) in the
+same row
+become (8, 4, 0, 0). After a shift to the right, they become (0, 0, 4, 8). This way of handling ambiguity
+makes it possible to more accurately formulate a game strategy.
+4. With each merger, the score increases by the value of the resulting tile.
+5. The game is lost if no further moves are possible.
+6. The game ends in victory if a tile with the value 2048 appears on the game board.
+
+Now let's start implementing the game:
+First, we'll need a class where the game logic will be implemented. Let's call it Game2048.
+We've created a "game engine" that starts the game itself, redraws game elements, etc.
+Accordingly, your Game2048 class must inherit the Game class. This and other engine classes are located
+in the com.codegym.engine.cell package. To use them, the Game2048 class must include the following import
+statement:
+import com.codegym.engine.cell.*;
+Try running your Game2048 class and see what happens.
 
 
 
